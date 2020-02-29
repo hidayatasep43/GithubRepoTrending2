@@ -1,9 +1,6 @@
 package com.example.githubrepotrending.data.source.remote
 
-import androidx.lifecycle.LiveData
 import com.example.githubrepotrending.BuildConfig
-import com.example.githubrepotrending.data.model.GithubRepo
-import com.rifqimfahmi.foorballapps.util.LiveDataCallAdapterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

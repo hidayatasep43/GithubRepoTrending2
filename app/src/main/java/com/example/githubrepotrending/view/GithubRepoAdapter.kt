@@ -8,10 +8,12 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubrepotrending.R
 import com.example.githubrepotrending.custom.CircleView
 import com.example.githubrepotrending.data.model.GithubRepo
+import com.example.githubrepotrending.utils.GithubRepoDiffCallBack
 import com.squareup.picasso.Picasso
 
 class GithubRepoAdapter internal constructor(
@@ -25,7 +27,7 @@ class GithubRepoAdapter internal constructor(
     }
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private var githubRepos = emptyList<GithubRepo>() // Cached copy of words
+    private var githubRepos = mutableListOf<GithubRepo>() // Cached copy of words
 
     class ViewHolderCollapse(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -61,7 +63,7 @@ class GithubRepoAdapter internal constructor(
                 .into(ivGithubRepo)
             tvTitle.text = githubRepo.name
             tvName.text = githubRepo.author
-            if (githubRepo.language == null) {
+            if (githubRepo.language.isEmpty()) {
                 circleView.visibility = GONE
                 tvLanguage.visibility = GONE
             } else {
@@ -70,7 +72,7 @@ class GithubRepoAdapter internal constructor(
                 circleView.setColor(githubRepo.languageColor)
                 tvLanguage.text = githubRepo.language
             }
-            if (githubRepo.description.isNullOrEmpty()) {
+            if (githubRepo.description.isEmpty()) {
                 tvDesc.visibility = GONE
             } else {
                 tvDesc.visibility = VISIBLE
@@ -129,9 +131,14 @@ class GithubRepoAdapter internal constructor(
 
     internal fun setRepos(githubRepos: List<GithubRepo>?) {
         if (githubRepos != null) {
-            this.githubRepos = githubRepos
-            notifyDataSetChanged()
+            val diffCallBack = GithubRepoDiffCallBack(this.githubRepos, githubRepos);
+            val diffResult = DiffUtil.calculateDiff(diffCallBack)
+
+            this.githubRepos.clear()
+            this.githubRepos.addAll(githubRepos)
+            diffResult.dispatchUpdatesTo(this)
         }
+
     }
 
     internal fun updateRepo(position: Int) {

@@ -15,47 +15,7 @@ import java.util.*
 class GithubRepoRepository(
     private val githubRepoDao: GithubRepoDao,
     private val githubRepoService: GithubRepoService,
-    private val localPreferences: LocalPreferences
-) {
-
-    fun getGithubRepo(viewModelScope: CoroutineScope): LiveData<Resource<List<GithubRepo>>> {
-        return object : NetworkBoundResource<List<GithubRepo>, List<GithubRepo>>(viewModelScope) {
-            override suspend fun saveCallResult(item: List<GithubRepo>) {
-                githubRepoDao.setGithubRepoData(item)
-            }
-
-            override fun processResponse(response: List<GithubRepo>): List<GithubRepo> {
-                return response
-            }
-
-            override suspend fun createCall(): Response<List<GithubRepo>> {
-                return githubRepoService.getPopularGithubRepo()
-            }
-
-            override fun shouldFetch(): Boolean {
-                return true
-            }
-
-            override fun isExpiredData(): Boolean {
-                val lastUpdate: Long =
-                    localPreferences.getValueLong(LocalPreferences.Key.LAST_UPDATE_REPO.name)
-                //max time data fecth from database is 2 hour from last saved
-                return Calendar.getInstance().timeInMillis - lastUpdate < 7200000
-            }
-
-            override suspend fun loadFromDb(): List<GithubRepo> {
-                return githubRepoDao.getAllRepo()
-            }
-
-            override fun saveLastUpdate() {
-                localPreferences.save(
-                    LocalPreferences.Key.LAST_UPDATE_REPO.name,
-                    Calendar.getInstance().timeInMillis
-                )
-            }
-
-        }.asLiveData()
-    }
+    private val localPreferences: LocalPreferences) {
 
     suspend fun getGithubRepoV2(): LiveData<Resource<List<GithubRepo>>> {
         return object : NetworkBoundResourceV2<List<GithubRepo>, List<GithubRepo>>() {
@@ -73,7 +33,8 @@ class GithubRepoRepository(
             }
 
             override fun saveLastUpdate() {
-                localPreferences.save(LocalPreferences.Key.LAST_UPDATE_REPO.name, Calendar.getInstance().timeInMillis
+                localPreferences.save(
+                    LocalPreferences.Key.LAST_UPDATE_REPO.name, Calendar.getInstance().timeInMillis
                 )
             }
 
