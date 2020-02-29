@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">GithubRepoTrending</string>
+    <string name="title_trending">Trending</string>
+    <string name="title_empty_state">Something went wrong..</string>
+    <string name="desc_empty_state">An alien is probably blocking your signal</string>
+    <string name="cd_image_empty_state">Image empty state</string>
+    <string name="btn_retry">retry</string>
+    <string name="cd_image_avatar">Image avatar</string>
+    <string name="cd_img_star">Icon Star</string>
+</resources>

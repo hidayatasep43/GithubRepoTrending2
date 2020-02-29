@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/spacing_normal"
+        android:background="?attr/selectableItemBackground">
+    <ImageView
+            android:id="@+id/image_avatar"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/cd_image_avatar"
+            android:layout_marginStart="@dimen/spacing_normal"/>
+    <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:textSize="14sp"
+            android:layout_marginStart="@dimen/spacing_normal"
+            android:layout_marginEnd="@dimen/spacing_normal"
+            android:layout_toEndOf="@id/image_avatar"
+            tools:text="mbinary"/>
+    <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_alignStart="@id/tv_name"
+            android:layout_below="@id/tv_name"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="@dimen/spacing_normal"
+            android:textStyle="bold"
+            tools:text="mbinary"/>
+    <View android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:layout_below="@id/tv_title"
+          android:layout_marginTop="@dimen/spacing_normal"
+          android:background="#E0E0E0"/>
+</RelativeLayout>
