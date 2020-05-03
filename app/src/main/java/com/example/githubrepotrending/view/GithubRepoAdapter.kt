@@ -27,7 +27,7 @@ class GithubRepoAdapter internal constructor(
     }
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private var githubRepos = mutableListOf<GithubRepo>() // Cached copy of words
+    private var githubRepos = emptyList<GithubRepo>() // Cached copy of words
 
     class ViewHolderCollapse(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -131,14 +131,9 @@ class GithubRepoAdapter internal constructor(
 
     internal fun setRepos(githubRepos: List<GithubRepo>?) {
         if (githubRepos != null) {
-            val diffCallBack = GithubRepoDiffCallBack(this.githubRepos, githubRepos);
-            val diffResult = DiffUtil.calculateDiff(diffCallBack)
-
-            this.githubRepos.clear()
-            this.githubRepos.addAll(githubRepos)
-            diffResult.dispatchUpdatesTo(this)
+            this.githubRepos = githubRepos
+            notifyDataSetChanged()
         }
-
     }
 
     internal fun updateRepo(position: Int) {

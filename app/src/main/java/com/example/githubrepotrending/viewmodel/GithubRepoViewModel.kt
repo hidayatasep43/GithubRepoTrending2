@@ -36,14 +36,5 @@ class GithubRepoViewModel(application: Application): AndroidViewModel(applicatio
         }
     }
 
-    /*public fun getListGithubRepo() {
-        _listGithub.removeSource(listGithubRepo)
-        listGithubRepo = githubRepoRepository.getGithubRepo(viewModelScope)
-        _listGithub.addSource(listGithubRepo) {
-            _listGithub.value = it
-        }
-    }*/
-
-
 
 }

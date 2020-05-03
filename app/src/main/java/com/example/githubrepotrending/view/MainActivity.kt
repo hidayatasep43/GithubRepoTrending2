@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity(), GithubRepoAdapter.EventItemListener {
                     adapter.setRepos(it.data)
                 }
             } else if (it.status == Status.LOADING) {
+                hideEmptyView()
                 if (!swiperefresh.isRefreshing) {
                     progressbar.visibility = View.VISIBLE
                 }
@@ -52,7 +53,6 @@ class MainActivity : AppCompatActivity(), GithubRepoAdapter.EventItemListener {
         }
 
         btnRefresh.setOnClickListener({
-            hideEmptyView()
             githubRepoViewModel.getListGithubRepo()
         })
     }
@@ -83,14 +83,17 @@ class MainActivity : AppCompatActivity(), GithubRepoAdapter.EventItemListener {
     }
 
     private fun hideEmptyView() {
-        titleEmptyState.visibility = View.GONE
-        descEmptyState.visibility = View.GONE
-        imgEmptyState.visibility = View.GONE
-        btnRefresh.visibility = View.GONE
+        if (btnRefresh.visibility == View.VISIBLE) {
+            titleEmptyState.visibility = View.GONE
+            descEmptyState.visibility = View.GONE
+            imgEmptyState.visibility = View.GONE
+            btnRefresh.visibility = View.GONE
+        }
     }
 
     private fun dismissLoading() {
         progressbar.visibility = View.GONE
         swiperefresh.setRefreshing(false)
     }
+
 }
