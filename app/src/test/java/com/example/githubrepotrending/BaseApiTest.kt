@@ -1,21 +1,25 @@
 package com.example.githubrepotrending
 
+import android.util.Log
 import com.example.githubrepotrending.data.source.remote.GithubRepoService
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
+import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
+import java.net.HttpURLConnection
 
 class BaseApiTest {
 
-    protected var mockWebServer = MockWebServer()
-    protected lateinit var githubRepoService: GithubRepoService
+    private var mockWebServer = MockWebServer()
+    private lateinit var githubRepoService: GithubRepoService
 
     @Before
     fun setup() {
@@ -35,11 +39,29 @@ class BaseApiTest {
 
     @Test
     fun testResponse() {
-        mockHttpResponse(mockWebServer, "test.json", 200)
-
+        mockHttpResponse(mockWebServer, "test.json", HttpURLConnection.HTTP_OK)
+        runBlocking {
+            val response = githubRepoService.getPopularGithubRepo()
+            val listRepo = response.body();
+            if (listRepo != null) {
+                assertEquals(25, listRepo.size)
+                assertEquals("podgorskiy", listRepo.first().author)
+                assertEquals("ALAE", listRepo.first().name)
+                assertEquals("https://github.com/podgorskiy.png", listRepo.first().avatar)
+            }
+        }
     }
 
-    private fun provideOkHttpClient(): OkHttpClient {
+    @Test(expected = HttpException::class)
+    fun testResponseFail(){
+        mockHttpResponse(mockWebServer, "test.json", HttpURLConnection.HTTP_FORBIDDEN)
+        runBlocking {
+            val response = githubRepoService.getPopularGithubRepo()
+            Log.e("","")
+        }
+    }
+
+    fun provideOkHttpClient(): OkHttpClient {
         val client = OkHttpClient.Builder()
         return client.build()
     }
@@ -51,7 +73,7 @@ class BaseApiTest {
                 .setBody(getJson(fileName))
         )
 
-    private fun getJson(path: String): String {
+    fun getJson(path: String): String {
         val uri = this.javaClass.classLoader!!.getResource(path)
         val file = File(uri.path)
         return String(file.readBytes())
